@@ -148,7 +148,6 @@ class AnimationController { //A class that manages an entity's animations
 		if(this.state !== null && this.state != state){
 			this.animations[currentAnimation][1].resetAnimation();
 		}
-
 		this.state = state;
 	}
 		
@@ -306,8 +305,7 @@ class Camera {
 			if(checkCollision(player.rightCollider, this.rightCollider)){
 				this.drawX -= player.velocityX;
 				this.cameraOffset -= player.velocityX;
-				
-				
+								
 				if(this.drawX <= -32) {
 					this.mapX +=1;
 					this.drawX = -16;
@@ -559,7 +557,6 @@ class Player extends Entity {
 
 		for(let i=0; i<environmentalBoundingBoxes.boxList.length; i++){
 			if(checkCollision(this.groundCheck, environmentalBoundingBoxes.boxList[i].boundingBox)){
-				//this.groundCheck.draw(9);
 				player.jumpCount=0;
 				player.isJumping = false;
 				return true;
