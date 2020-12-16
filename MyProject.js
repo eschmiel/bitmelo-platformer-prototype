@@ -8,15 +8,6 @@ var entityList = []; //A master list of all game entities (not including boundin
 var gravity = 0;
 
 
-
-
-
-
-
-
-
-
-
 class Animation { //This creates an object containing an animation.
 //The passed value must be a 2 dimensional array. The first dimension lists the animation sprites in order.
 //The second dimension must contain two values. The first value is the gID of the sprite for that frame.
@@ -53,14 +44,10 @@ class Animation { //This creates an object containing an animation.
 		return drawSprite;
 	}
 	
-	resetAnimation(){ //This resets the animation so it can be run from the beginning again
-		
+	resetAnimation(){ //This resets the animation so it can be run from the beginning again	
 		this.frameCount = 0;
-		this.currentSprite = 0;
-		
-	}
-	
-	
+		this.currentSprite = 0;		
+	}	
 }
 		
 
@@ -74,10 +61,10 @@ class AnimationController { //A class that manages an entity's animations
 		this.animations.push([state, animation]);
 	}
 	
-	
 	setState(state){ //Sets the current state of the animation controller
 		let currentAnimation = this.currentAnimation();
-		if(this.state !== null && this.state != state){
+
+		if (this.state !== null && this.state != state) {
 			this.animations[currentAnimation][1].resetAnimation();
 		}
 
@@ -88,11 +75,10 @@ class AnimationController { //A class that manages an entity's animations
 	currentAnimation(){ //This returns the current animation set in the animation controller according to its state.
 		let counter = 0;
 		for (let test of	this.animations) {
-			if(this.state == test[0]){
 
-				return counter;
-			
-			}
+			if (this.state == test[0]) {
+				return counter;			
+			}		
 			
 			counter++;
 		}
@@ -107,11 +93,8 @@ class AnimationController { //A class that manages an entity's animations
 			}
 			else{
 				screen.drawTile(drawSprite, Math.ceil(posX), Math.floor(posY), flip);
-			}
-				
-			}
-		
-	
+			}			
+	 }
 }
 
 
@@ -162,9 +145,7 @@ class Entity { //General entity class for anything that takes up space on the sc
 			if(pointToCheck <= totalMovementY){
 				posYToCheck += dirY;
 			}
-			//console.log(totalMovementX);
 			collider.update(posXToCheck, posYToCheck, colliderWidth, colliderHeight); //This moves the collider to the point to check
-			//collider.draw(11);
 			for(let i=0;i<environmentalBoundingBoxes.boxList.length;i++){ //Checks every wall, if it collides, it returns which wall it hit and how quickly it hit it
 				if(checkCollision(collider, environmentalBoundingBoxes.boxList[i].boundingBox)){
 					return [i, pointToCheck];
@@ -173,15 +154,10 @@ class Entity { //General entity class for anything that takes up space on the sc
 			
 			pointToCheck++;
 			
-			
-		} while(pointToCheck <= Math.max(totalMovementX, totalMovementY));
-		
-		
-		
+		} while (pointToCheck <= Math.max(totalMovementX, totalMovementY));
+
 		return false;
 	}
-	
-	
 }
 
 
@@ -198,9 +174,6 @@ class BoundingBox extends Entity {
 			this.bottomRight = {x: posX + width, y: posY};
 			this.topLeft = { x: posX, y: posY + height};
 			this.topRight = { x: posX + width, y: posY + height};
-			
-		//Adds this bounding box to the master list of all bounding boxes
-			//boundingBoxList.push(this);
 		}
 
 //This method changes the position of the collider		
@@ -232,8 +205,8 @@ class Flower extends Entity {
 		
 		entityList.push(this);
 	}
-	
 }
+
 /////////////////////////////////////////////////////////////////////////
 class Camera {
 	constructor(posX, posY, width, height, tileWidth) {
@@ -255,10 +228,8 @@ class Camera {
 	update() {
 		if(this.mapX < 15){
 			if(checkCollision(player.rightCollider, this.rightCollider)){
-				//this.mapX += player.velocityX/16;
 				this.drawX -= player.velocityX;
 				this.cameraOffset -= player.velocityX;
-				
 				
 				if(this.drawX <= -32) {
 					this.mapX +=1;
@@ -298,19 +269,8 @@ class Camera {
 				
 			}
 		}
-		
-		//if(Math.abs(this.cameraOffset)>=16 ){
-			//this.cameraOffset = 0;}
-		/*	let camDirection = Math.sign(this.cameraOffset);
-			this.cameraOffset = (Math.abs(this.cameraOffset / 16) - Math.abs(Math.ceil(this.cameraOffset / 16))) * 16;
-			this.cameraOffset = this.cameraOffset * camDirection;
-		}*/
 	}
-	
 }
-
-
-
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -336,23 +296,22 @@ class Player extends Entity {
 		console.log(this.gravity);
 		
 		this.animator.add("idle", new Animation([[241, 20],
-																						 [242, 20],
-																						 [241, 10],
-																						 [243, 10],
-																						 [241, 10],
-																						 [246, 5],
-																						 [241, 10],
-																						 [243, 10],
-																						 [244, 20],
-																						 [245, 5],
-																						 [244, 10],
-																						 [242, 30]]));
+												[242, 20],
+												[241, 10],
+												[243, 10],
+												[241, 10],
+												[246, 5],
+												[241, 10],
+												[243, 10],
+												[244, 20],
+												[245, 5],
+												[244, 10],
+												[242, 30]]));
 																						 
 		this.animator.add("walk", new Animation([[227, 5],
-																						 [228, 5],
-																						 [225, 5],
-																						 [226, 5]]));
-																						 
+												[228, 5],
+												[225, 5],
+												[226, 5]]));																				 
 		
 		this.animator.setState("idle");
 							
@@ -394,8 +353,6 @@ class Player extends Entity {
 			this.jumpCount++;
 		}
 		
-		
-		
 		if(this.isGrounded === false){
 			if(this.jumpCount>this.jumpTime){
 				this.velocityY = this.velocityY - this.jumpFallGrav;
@@ -408,8 +365,6 @@ class Player extends Entity {
 			this.velocityY = 0;
 		}
 		
-		
-		
 		if (shouldMove) {
 			this.move();
 		}
@@ -421,35 +376,15 @@ class Player extends Entity {
 				player.velocityX=0;
 			}
 		}
-		
-		//this.isGrounded = this.processCollisions(this.velocityX, this.velocityY, this.groundCheck);
-		
-		
-		
-		
+
 		this.posX = this.posX + this.velocityX;
 		this.posY = this.posY + this.velocityY;
-	//	this.updateBoundaryBoxes();
-			/*
-			console.log("Player pos x: " + player.posX);
-			console.log("left Collider pos x: " + player.leftCollider.posX);
-			console.log("right Collider pos x: " + player.rightCollider.posX);*/
+
 		this.wallCheck();
 		this.updateBoundaryBoxes();
-		//this.groundCheck.draw(9);
 		}
 		
-		
-		
 		move() {
-			//this.posY = Math.ceil(this.posY + this.velocityY);
-			//this.posY = Math.ceil(this.posY - gravity);
-			//if(player.isJumping===true){this.velocityY = this.velocityY - gravity}
-			
-			/*if (this.velocityY < -3.9) {
-				this.velocityY = -3.9;
-			}*/
-			//this.posY = Math.ceil(this.posY + this.velocityY);
 			
 			if (input.left.pressed) {
 				if(this.velocityX>0.1){
@@ -457,7 +392,6 @@ class Player extends Entity {
 				}
 				this.velocityX = lerp(this.velocityX, -this.topSpeed, this.weight);
 			
-				//this.posX = Math.floor(this.posX - this.velocityX);
 				this.animator.setState("walk");
 				this.facing = 1;
 			}
@@ -466,7 +400,6 @@ class Player extends Entity {
 					this.velocityX = -0.1;
 				}
 				this.velocityX = lerp(this.velocityX, this.topSpeed, this.weight);
-				//this.posX = Math.ceil(this.posX + this.topSpeed);
 				this.animator.setState("walk");
 				this.facing = 0;
 			}
@@ -475,23 +408,10 @@ class Player extends Entity {
 					this.jump();
 				}
 			}
-			/*if (input.down.pressed) {
-				this.posY = Math.ceil(this.posY - this.topSpeed);
-			}*/
 			
 			if(!input.right.pressed && !input.left.pressed){
 				this.velocityX = lerp(this.velocityX, 0, this.weight2);
 			}
-			
-			
-			
-				//this.posX = this.posX + this.velocityX;
-			
-		
-		//	if(this.isJumping === true){
-			//	this.jump();
-		//	}
-			
 		}
 		
 		
@@ -499,10 +419,6 @@ class Player extends Entity {
 			this.isJumping = true;
 			
 			this.velocityY = this.jumpSpeed;
-			
-			/*if(this.velocityY == this.jumpSpeed){
-				this.isJumping = false;
-			}*/
 		}
 	
 	wallCheck(){
@@ -513,14 +429,6 @@ class Player extends Entity {
 		let envBoxes = environmentalBoundingBoxes.boxList;
 		let checks = [topCheck, rightCheck, bottomCheck, leftCheck];
 		
-		//debugButton(checks);
-		
-		/*console.log(rightCheck);
-		console.log(leftCheck);
-		console.log(topCheck);
-		console.log(bottomCheck);
-		*/
-		
 		let closestD = 100;
 		
 		for(let i=0;i<4;i++){
@@ -529,8 +437,6 @@ class Player extends Entity {
 			}
 		}
 		
-		
-		
 		let closestCollison = [];
 		
 		for(let i=0;i<4;i++){
@@ -538,9 +444,6 @@ class Player extends Entity {
 				closestCollison.push(i);
 			}
 		}
-		
-	
-		
 		
 		closestCollison.forEach(function(element){
 		
@@ -554,7 +457,7 @@ class Player extends Entity {
 					player.posX-=2;
 				}
 				player.velocityX=0;
-			//	console.log("colliding right");
+
 			}
 			
 			if(element == 2){
@@ -567,7 +470,6 @@ class Player extends Entity {
 					player.posX-=2;
 				}
 				player.velocityX=0;
-				//console.log("colliding left");
 				
 			}
 		});
@@ -581,95 +483,15 @@ class Player extends Entity {
 		let posDiff = Math.abs(this.groundCheck.posX - tileCheckPosX);
 		let tileCheck;
 		let tileCheck2;
-//		tileCheckPosX = Math.floor(tileCheckPosX + camera.cameraOffset);
-		
-		//console.log("checked spot: " + ((tileCheckPosX + camera.cameraOffset)));
-		//console.log("checked spot: " + Math.floor((tileCheckPosX + camera.cameraOffset)));
-		
+
 		for(let i=0; i<environmentalBoundingBoxes.boxList.length; i++){
 			if(checkCollision(this.groundCheck, environmentalBoundingBoxes.boxList[i].boundingBox)){
-				//this.groundCheck.draw(9);
 				player.jumpCount=0;
 				player.isJumping = false;
 				return true;
 			}
-		}
-		
+		}		
 		return false;
-		
-		
-		/*for(let i=0; i< environmentalBoundingBoxes.boxList.length; i++){
-		//console.log(environmentalBoundingBoxes.boxList.length);		
-//		console.log(environmentalBoundingBoxes.boxList[i].pixelX);
-			
-				console.log((environmentalBoundingBoxes.boxList[i].pixelX));
-			if (Math.floor(environmentalBoundingBoxes.boxList[i].pixelX) == Math.floor(tileCheckPosX + camera.cameraOffset) ){
-				
-				tileCheck = environmentalBoundingBoxes.boxList[i].boundingBox;
-				tileCheck2 = environmentalBoundingBoxes.boxList[i+1].boundingBox;
-				
-				break;
-			}
-		}
-		//console.log("checked");
-		tileCheck.draw(8);
-		tileCheck2.draw(4);
-		
-		if(checkCollision(this.groundCheck, tileCheck)){
-			return true;
-		}
-		else if(posDiff > 11){
-			return checkCollision(this.groundCheck, tileCheck2);			
-		
-		}*/
-		
-	}	
-		/*wallCheck() {
-			environmentalBoundingBoxes.boxList.forEach(function(item) {
-					if(player.velocityY > 0){
-						if(checkCollision(item,player.topCollider)) {
-								player.posY = (item.posY-16);
-								player.updateBoundaryBoxes();
-							}
-					}		
-					if(checkCollision(item, player.rightCollider)) {
-						player.posX = (item.posX - 12);
-						if(player.facing == 1){
-							player.posX-=2;
-						}
-						
-						player.updateBoundaryBoxes();
-						//player.velocityX = 0;
-					}
-				
-					if(checkCollision(item,player.leftCollider)) {
-						player.posX = (item.posX + 13);
-						if(player.facing == 1){
-							player.posX-=2;
-						}
-						
-						player.updateBoundaryBoxes();
-						//player.velocityX = 0;
-					}
-				
-					if(checkCollision(item,player.bottomCollider)) {
-						player.posY = (item.posY + 16);
-						if(player.isJumping===true){player.velocityY=0;}
-						player.isJumping = false;
-						
-						player.updateBoundaryBoxes();
-					}
-					
-					if(player.velocityY <= 0){
-						if(checkCollision(item,player.topCollider)) {
-								player.posY = (item.posY-16);
-								player.updateBoundaryBoxes();
-							}
-					}
-						
-			});
-		}*/
-		
 }
 
 var player = new Player(100, 64, 16, 16, 1, 0);
@@ -689,10 +511,7 @@ var environmentalBoundingBoxes = {
 			for(let x = (mapX); x<(mapX + (width/tileWidth)); x++){
 					
 				if	(engine.mapData.getTile(x,y,0,0)==113) {
-					
-					//console.log(boundingBoxList[newEnvBox.boundingBoxListIndex]);
-					this.boxList.push({boundingBox: new BoundingBox(pixelX,pixelY,16,16), pixelX: pixelX, pixelY: pixelY});
-				
+					this.boxList.push({boundingBox: new BoundingBox(pixelX,pixelY,16,16), pixelX: pixelX, pixelY: pixelY});				
 				}
 				pixelX += tileWidth;
 			}
@@ -708,43 +527,31 @@ var environmentalBoundingBoxes = {
 		let spliceCount = this.boxList.length;
 		
 		for(x=0; x<spliceCount; x++){
-			//boundingBoxList.splice(this.boxList[0].boundingBoxListIndex, 1);
-			this.boxList.splice(0, 1);
-				//updateBoundingBoxList();
-		
+			this.boxList.splice(0, 1);		
 		}
 		
 		this.create(mapX, mapY, width, height, tileWidth, drawX, drawY);
-		
-	
-	//	updateBoundingBoxList();
 	}
 		
 };
 
 var flower1 = new Flower(122, 48, 16, 16);	
 
-
-
-
 engine.onInit = () => {
 		if (environmentalBoundingBoxes.created === 0){
 		environmentalBoundingBoxes.create(Math.floor(camera.mapX), 
-																			camera.mapY, 
-																			camera.width, 
-																			camera.height, 
-																			camera.tileWidth,
-																			camera.drawX,
-																			camera.drawY);
+											camera.mapY, 
+											camera.width, 
+											camera.height, 
+											camera.tileWidth,
+											camera.drawX,
+											camera.drawY);
 	}
- 
-
 };
 
 engine.onUpdate = () => {
 	
 	screen.clear(1);
-	
 	
 	camera.update();
 	
@@ -758,47 +565,20 @@ engine.onUpdate = () => {
 		0,
 		0
 	);
-	
 
 	environmentalBoundingBoxes.update(Math.floor(camera.mapX), 
-																		camera.mapY, 
-																		camera.width, 
-																		camera.height, 
-																		camera.tileWidth,
-																		camera.drawX,
-																		camera.drawY);
+										camera.mapY, 
+										camera.width, 
+										camera.height, 
+										camera.tileWidth,
+										camera.drawX,
+										camera.drawY);
 	
 	player.update(true);
 	
-//	console.log(player.animator.animations);
 	player.animator.animate(player.posX, player.posY, player.facing);
-	
-	
-	/*	
-	player.topCollider.draw(9);
-	player.bottomCollider.draw(9);
-	player.leftCollider.draw(9);
-	player.rightCollider.draw(9);
-	
-	camera.leftCollider.draw(9);
-	camera.bottomCollider.draw(9);
-	camera.topCollider.draw(9);
-	camera.rightCollider.draw(9);
-	*/
-	
-	/*screen.drawTile(player.sprite,
-									player.posX,
-									player.posY,
-									player.facing); */
-	
-	//flower1.draw();
-	
-	//debugButton(environmentalBoundingBoxes.boxList);
-	
-//	debugButton(boundingBoxList);
 
 	debugButton();
-	//debugButton(player.velocityX);
 };
 
 function drawBoundingBoxes(boundingBoxList) {
@@ -806,12 +586,10 @@ function drawBoundingBoxes(boundingBoxList) {
 
 	for(let x = 0; x<boundingBoxList.length; x++){
 		boundingBoxList[x].boundingBox.draw(colorIndex);
-		//colorIndex++;
 		
 		if (colorIndex > 16) {
 			colorIndex = 2;
-		}
-		
+		}		
 	}
 }
 
@@ -835,18 +613,13 @@ function debugButton(a) {
 		drawBoundingBoxes(environmentalBoundingBoxes.boxList);
 		drawPlayerColliders();
 		drawCameraColliders();
-	 //console.log("posY: " + player.posY);
-	// console.log(player.velocityX);
 		console.log(a);
-		//console.log(environmentalBoundingBoxes.boxList);
 		player.jumpFallGrav -= 0.01;
-		
-		 console.log("jumpFallGrav: " + player.jumpFallGrav);
+		console.log("jumpFallGrav: " + player.jumpFallGrav);
 	}
 	
 	if (input.action2.down){
 	 player.jumpFallGrav += 0.01;
-	 
 		 console.log("jumpFallGrav: " + player.jumpFallGrav);
 	}
 }
