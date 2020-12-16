@@ -88,21 +88,11 @@ const input = engine.input;
 const screen = engine.screen;
 const audio = engine.audio;
 
-
 var entityList = []; //A master list of all game entities (not including bounding boxes)
 
 var gravity = 0;
 
-
-
-
-
-
-
-
-
-
-
+	    
 class Animation { //This creates an object containing an animation.
 //The passed value must be a 2 dimensional array. The first dimension lists the animation sprites in order.
 //The second dimension must contain two values. The first value is the gID of the sprite for that frame.
@@ -115,11 +105,9 @@ class Animation { //This creates an object containing an animation.
 		this.active = false;
 		this.spriteSwitchFrames = [];
 		
-		for(let x=0; x<this.frameData.length; x++) { //This loop calculates the length of the animation
-			
+		for(let x=0; x<this.frameData.length; x++) { //This loop calculates the length of the animation			
 			this.spriteSwitchFrames.push(this.frameData[x][1] + this.animationLength); //This marks each frame when the sprite switches
-			this.animationLength += this.frameData[x][1];
-			
+			this.animationLength += this.frameData[x][1];			
 		}
 	}
 	
@@ -134,19 +122,14 @@ class Animation { //This creates an object containing an animation.
 		
 		if(this.currentSprite >= this.frameData.length) {
 			this.resetAnimation();
-		}
-		
+		}		
 		return drawSprite;
 	}
 	
-	resetAnimation(){ //This resets the animation so it can be run from the beginning again
-		
+	resetAnimation(){ //This resets the animation so it can be run from the beginning again		
 		this.frameCount = 0;
-		this.currentSprite = 0;
-		
-	}
-	
-	
+		this.currentSprite = 0;		
+	}		
 }
 		
 
@@ -159,27 +142,21 @@ class AnimationController { //A class that manages an entity's animations
 	add(state, animation){ //Adds an animation to the controller and what state the entity should be in when running that animation
 		this.animations.push([state, animation]);
 	}
-	
-	
+		
 	setState(state){ //Sets the current state of the animation controller
 		let currentAnimation = this.currentAnimation();
 		if(this.state !== null && this.state != state){
 			this.animations[currentAnimation][1].resetAnimation();
 		}
-
 		this.state = state;
 	}
-	
-	
+		
 	currentAnimation(){ //This returns the current animation set in the animation controller according to its state.
 		let counter = 0;
 		for (let test of	this.animations) {
 			if(this.state == test[0]){
-
-				return counter;
-			
-			}
-			
+				return counter;			
+			}			
 			counter++;
 		}
 	}
@@ -193,11 +170,8 @@ class AnimationController { //A class that manages an entity's animations
 			}
 			else{
 				screen.drawTile(drawSprite, Math.ceil(posX), Math.floor(posY), flip);
-			}
-				
-			}
-		
-	
+			}				
+			}			
 }
 
 
@@ -212,8 +186,7 @@ class Entity { //General entity class for anything that takes up space on the sc
 		this.facing = facing;
 		this.animator = new AnimationController();
 		this.velocityX = 0;
-		this.velocityY = 0;
-		
+		this.velocityY = 0;		
 		}
 	
 	draw() {
@@ -238,8 +211,7 @@ class Entity { //General entity class for anything that takes up space on the sc
 		let colliderHeight = collider.height;
 		
 		let pointToCheck = 0; //This is the point we're currently checking
-		
-		
+				
 		do {
 			
 			if(pointToCheck <= totalMovementX){ //Checks to see if we've reached the collider's total movement yet for each axis, and if not
@@ -258,16 +230,11 @@ class Entity { //General entity class for anything that takes up space on the sc
 			}
 			
 			pointToCheck++;
-			
-			
+						
 		} while(pointToCheck <= Math.max(totalMovementX, totalMovementY));
-		
-		
-		
+				
 		return false;
-	}
-	
-	
+	}	
 }
 
 
@@ -344,8 +311,7 @@ class Camera {
 				//this.mapX += player.velocityX/16;
 				this.drawX -= player.velocityX;
 				this.cameraOffset -= player.velocityX;
-				
-				
+								
 				if(this.drawX <= -32) {
 					this.mapX +=1;
 					this.drawX = -16;
@@ -394,10 +360,7 @@ class Camera {
 	}
 	
 }
-
-
-
-
+	    
 /////////////////////////////////////////////////////////////////////////
 
 class Player extends Entity {
@@ -422,23 +385,11 @@ class Player extends Entity {
 		console.log(this.gravity);
 		
 		this.animator.add("idle", new Animation([[241, 20],
-																						 [242, 20],
-																						 [241, 10],
-																						 [243, 10],
-																						 [241, 10],
-																						 [246, 5],
-																						 [241, 10],
-																						 [243, 10],
-																						 [244, 20],
-																						 [245, 5],
-																						 [244, 10],
-																						 [242, 30]]));
-																						 
-		this.animator.add("walk", new Animation([[227, 5],
-																						 [228, 5],
-																						 [225, 5],
-																						 [226, 5]]));
-																						 
+							[242, 20],
+		this.animator.add("walk", new Animation([[227, 5], 
+							 [228, 5],
+							 [225, 5],
+							 [226, 5]]));
 		
 		this.animator.setState("idle");
 							
@@ -480,8 +431,6 @@ class Player extends Entity {
 			this.jumpCount++;
 		}
 		
-		
-		
 		if(this.isGrounded === false){
 			if(this.jumpCount>this.jumpTime){
 				this.velocityY = this.velocityY - this.jumpFallGrav;
@@ -493,9 +442,7 @@ class Player extends Entity {
 		else {
 			this.velocityY = 0;
 		}
-		
-		
-		
+				
 		if (shouldMove) {
 			this.move();
 		}
@@ -510,9 +457,6 @@ class Player extends Entity {
 		
 		//this.isGrounded = this.processCollisions(this.velocityX, this.velocityY, this.groundCheck);
 		
-		
-		
-		
 		this.posX = this.posX + this.velocityX;
 		this.posY = this.posY + this.velocityY;
 	//	this.updateBoundaryBoxes();
@@ -524,9 +468,7 @@ class Player extends Entity {
 		this.updateBoundaryBoxes();
 		//this.groundCheck.draw(9);
 		}
-		
-		
-		
+
 		move() {
 			//this.posY = Math.ceil(this.posY + this.velocityY);
 			//this.posY = Math.ceil(this.posY - gravity);
@@ -569,18 +511,14 @@ class Player extends Entity {
 				this.velocityX = lerp(this.velocityX, 0, this.weight2);
 			}
 			
-			
-			
 				//this.posX = this.posX + this.velocityX;
-			
-		
+
 		//	if(this.isJumping === true){
 			//	this.jump();
 		//	}
 			
 		}
-		
-		
+
 		jump() {
 			this.isJumping = true;
 			
@@ -614,9 +552,7 @@ class Player extends Entity {
 				closestD=checks[i][1];
 			}
 		}
-		
-		
-		
+
 		let closestCollison = [];
 		
 		for(let i=0;i<4;i++){
@@ -624,10 +560,7 @@ class Player extends Entity {
 				closestCollison.push(i);
 			}
 		}
-		
 	
-		
-		
 		closestCollison.forEach(function(element){
 		
 			if(element === 0){
@@ -653,8 +586,7 @@ class Player extends Entity {
 					player.posX-=2;
 				}
 				player.velocityX=0;
-				//console.log("colliding left");
-				
+				//console.log("colliding left");			
 			}
 		});
 		
@@ -816,15 +748,13 @@ var flower1 = new Flower(122, 48, 16, 16);
 engine.onInit = () => {
 		if (environmentalBoundingBoxes.created === 0){
 		environmentalBoundingBoxes.create(Math.floor(camera.mapX), 
-																			camera.mapY, 
-																			camera.width, 
-																			camera.height, 
-																			camera.tileWidth,
-																			camera.drawX,
-																			camera.drawY);
+						  camera.mapY, 
+						  camera.width, 
+						  camera.height, 
+						  camera.tileWidth,
+						  camera.drawX,
+						  camera.drawY);
 	}
- 
-
 };
 
 engine.onUpdate = () => {
@@ -847,13 +777,12 @@ engine.onUpdate = () => {
 	
 
 	environmentalBoundingBoxes.update(Math.floor(camera.mapX), 
-																		camera.mapY, 
-																		camera.width, 
-																		camera.height, 
-																		camera.tileWidth,
-																		camera.drawX,
-																		camera.drawY);
-	
+					  camera.mapY, 
+					  camera.width, 
+					  camera.height, 
+					  camera.tileWidth,
+					  camera.drawX,
+					  camera.drawY);	
 	player.update(true);
 	
 //	console.log(player.animator.animations);
